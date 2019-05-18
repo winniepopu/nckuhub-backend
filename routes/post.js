@@ -11,7 +11,7 @@ var middleware = require('../middleware');
 var config = require('../config.json');
 
 /* index  */
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
     // Log
     console.log("\n")
     console.log("========================================");
@@ -31,9 +31,9 @@ router.get('/', function (req, res) {
     db.GetColumn('post', colmuns, {
         'column': order,
         'order': 'DESC'
-    }, function (posts) {
+    }, function(posts) {
         if (req.query.hasOwnProperty("queryw")) {
-            db.query_post(posts, req.query.queryw, "query", function (posts, teachers, course_name) {
+            db.query_post(posts, req.query.queryw, "query", function(posts, teachers, course_name) {
                 if (req.query.order) {
                     res.json(posts);
                 } else {
@@ -46,7 +46,7 @@ router.get('/', function (req, res) {
                 }
             });
         } else if (req.query.hasOwnProperty("teacher")) {
-            db.query_post(posts, req.query.teacher, "teacher", function (posts, teachers, course_name) {
+            db.query_post(posts, req.query.teacher, "teacher", function(posts, teachers, course_name) {
                 if (req.query.order) {
                     res.json(posts);
                 } else {
@@ -59,7 +59,7 @@ router.get('/', function (req, res) {
                 }
             });
         } else if (req.query.hasOwnProperty("course_name")) {
-            db.query_post(posts, req.query.course_name, "course_name", function (posts, teachers, course_name) {
+            db.query_post(posts, req.query.course_name, "course_name", function(posts, teachers, course_name) {
                 if (req.query.order) {
                     res.json(posts);
                 } else {
@@ -101,7 +101,7 @@ router.get('/', function (req, res) {
                     req.query.catalog = "";
                     break;
             }
-            db.query_post(posts, req.query.catalog, "catalog", function (posts, teachers, course_name) {
+            db.query_post(posts, req.query.catalog, "catalog", function(posts, teachers, course_name) {
                 if (req.query.order) {
                     res.json(posts);
                 } else {
@@ -131,19 +131,19 @@ router.get('/', function (req, res) {
 });
 
 /* create */
-router.post('/create', function (req, res) {
-        var userid = config.userId; // 要登入才可以填寫心得，這邊假設存在一個假的 user (表示有登入才可以繼續往下，否則會被擋)
-        req.checkBody('course_name', '課程名稱不可為空').notEmpty();
-        req.checkBody('comment', '心得不可為空').notEmpty();
-        req.checkBody('comment', '心得最低需求 50 字').isLength({ min: 50});
-        req.checkBody('got', '收穫不可為空').notEmpty();
-        req.checkBody('sweet', '甜度不可為空').notEmpty();
-        req.checkBody('cold', '涼度不可為空').notEmpty();
-        var errors = req.validationErrors();
-        if (errors) {
-            console.log("Error " + errors);
-            res.send(errors);
-        } else {
+router.post('/create', function(req, res) {
+    var userid = config.userId; // 要登入才可以填寫心得，這邊假設存在一個假的 user (表示有登入才可以繼續往下，否則會被擋)
+    req.checkBody('course_name', '課程名稱不可為空').notEmpty();
+    req.checkBody('comment', '心得不可為空').notEmpty();
+    req.checkBody('comment', '心得最低需求 50 字').isLength({ min: 50 });
+    req.checkBody('got', '收穫不可為空').notEmpty();
+    req.checkBody('sweet', '甜度不可為空').notEmpty();
+    req.checkBody('cold', '涼度不可為空').notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        console.log("Error " + errors);
+        res.send(errors);
+    } else {
 
         /**
          * [ BackendHw ]
@@ -154,35 +154,35 @@ router.post('/create', function (req, res) {
          *      - Hint: 可以去觀察 req.body，裡頭會告訴你前端塞了什麼東西給咱們後端～
          */
 
-            // post
-            // Data: {
-            //     course_name : 音樂舞蹈戲劇
-            //     teacher : 林怡薇
-            //     semester : 107-1
-            //     catalog : A9
-            //     comment : 這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了
-            //     user_id : 3
-            // }
+        // post
+        // Data: {
+        //     course_name : 音樂舞蹈戲劇
+        //     teacher : 林怡薇
+        //     semester : 107-1
+        //     catalog : A9
+        //     comment : 這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了這堂課太開心了
+        //     user_id : 3
+        // }
 
 
-            // course_rate
-            // Data: {
-            //     sweet : 6
-            //     cold : 6
-            //     got : 6
-            //     course_name : 音樂舞蹈戲劇
-            //     teacher : 林怡薇
-            //     user_id : 3
-            //     post_id : 3172
-            // }
+        // course_rate
+        // Data: {
+        //     sweet : 6
+        //     cold : 6
+        //     got : 6
+        //     course_name : 音樂舞蹈戲劇
+        //     teacher : 林怡薇
+        //     user_id : 3
+        //     post_id : 3172
+        // }
 
-        }
+    }
 });
 
 /* new */
-router.get('/new', function (req, res) {
+router.get('/new', function(req, res) {
     var sql = 'SELECT id,課程名稱,時間,老師,系所名稱,semester FROM course_all WHERE semester ="104-2" OR semester ="105-1" OR semester ="105-2" OR semester ="106-1" OR semester = "106-2"';
-    db.Query(sql, function (course) {
+    db.Query(sql, function(course) {
         res.json({
             'course': course,
             'user': req.user
@@ -191,17 +191,17 @@ router.get('/new', function (req, res) {
 });
 
 /* show */
-router.get('/:id', function (req, res) {
+router.get('/:id', function(req, res) {
     var id = req.params.id;
     if (id.match(/\D/g)) {
         console.log('\n' + 'GET /post/' + id);
         res.redirect('/');
     } else {
         console.log('\n' + 'GET /post/' + id);
-        db.FindbyID('post', id, function (post) {
+        db.FindbyID('post', id, function(post) {
             db.FindbyColumn('course_rate', ['give', 'got'], {
                 "post_id": post.id
-            }, function (rate) {
+            }, function(rate) {
                 res.json({
                     'post': post,
                     'user': req.user,
@@ -215,7 +215,7 @@ router.get('/:id', function (req, res) {
 
 
 /*report post */
-router.post('/report/:id', function (req, res) {
+router.post('/report/:id', function(req, res) {
     /* 要檢舉的文章id*/
     var postid = parseInt(req.params.id);
     console.log('\n' + 'POST /post/report/' + postid);
@@ -226,7 +226,7 @@ router.post('/report/:id', function (req, res) {
         db.FindbyColumn('report_post', ["id"], {
             'post_id': postid,
             'user_id': userid
-        }, function (reports) {
+        }, function(reports) {
             if (reports.length > 0) {
                 console.log('Already report');
                 res.send('Already report');
@@ -240,11 +240,11 @@ router.post('/report/:id', function (req, res) {
                     post_id: postid,
                     reason: reason
                 }
-                db.Insert('report_post', report_post, function (err, results) {
+                db.Insert('report_post', report_post, function(err, results) {
                     if (err) throw err;
                     console.log('Report post ' + postid + ' success');
                     /* 依照post_id將文章的檢舉次數+1 */
-                    db.UpdatePlusone('post', 'report_count', postid, function (results) {
+                    db.UpdatePlusone('post', 'report_count', postid, function(results) {
                         res.send('Success');
                     });
                 });
@@ -258,8 +258,29 @@ router.post('/report/:id', function (req, res) {
 });
 
 /*report post */
-router.post('/setWish/:userID', function (req, res) {
+router.post('/setWish/:userID', function(req, res) {
     var userID = config.userId;
+    // console.log(req.body);
+    // console.log(req.body['now_wishlist'])
+    var i;
+    var inputData = {};
+
+    db.DeleteByColumn('wishList', { 'userID': userID }, function() {
+
+        for (i = 0; i < req.body['now_wishlist'].length; i++) {
+
+            inputData['userID'] = userID;
+            inputData['courseID'] = req.body['now_wishlist'][i];
+            // console.log(inputData);
+
+            db.Insert('wishList', inputData, function(err, results) {
+                if (err) throw err;
+            })
+        }
+        console.log('wishlist post ' + req.body['now_wishlist'] + ' success');
+
+    });
+
     /**
      * [ BackendHw ]
      *  0. 此 API 是用來記錄下 user 的願望課程，因為需要紀錄是哪個 user 的，所以先幫各位假定了一個
@@ -277,7 +298,7 @@ router.post('/setWish/:userID', function (req, res) {
     // }
 });
 
-router.post('/setTable/:userID',  function (req, res) {
+router.post('/setTable/:userID', function(req, res) {
     var userID = config.userId;
     /**
      * [ BackendHw ]
@@ -298,10 +319,10 @@ router.post('/setTable/:userID',  function (req, res) {
 });
 
 /* del */
-router.delete('/:id', function (req, res) {
+router.delete('/:id', function(req, res) {
     var id = req.params.id;
     console.log('\n' + 'DELETE post/' + id);
-    db.DeleteById('post', id, function (err) {
+    db.DeleteById('post', id, function(err) {
         res.send('Success');
     });
 });
